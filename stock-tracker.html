@@ -53,7 +53,7 @@
   .btn {
     display: inline-flex; align-items: center; justify-content: center; gap: 8px;
     height: 42px; padding: 0 16px; border-radius: 10px; border: 1px solid var(--line);
-    background: var(--card); font-weight: 600; font-size: 15px; color: var(--ink);
+    background: var(--card); font-weight: 600; font-size: 15px; color: var(--ink); white-space: nowrap;
     transition: background .15s, border-color .15s, box-shadow .15s;
   }
   .btn:hover { background: var(--soft); }
@@ -179,11 +179,58 @@
 
   .loading { padding: 64px 0; text-align: center; color: var(--ink-3); }
 
-  @media (max-width: 900px) { .kpis { grid-template-columns: repeat(2, 1fr); } }
+  /* Main nav */
+  .mainnav { display: flex; gap: 4px; margin-left: 20px; }
+  .navbtn { border: 0; background: none; height: 40px; padding: 0 14px; border-radius: 8px; font-weight: 600; font-size: 16px; color: var(--ink-2); }
+  .navbtn:hover { background: var(--soft); color: var(--ink); }
+  .navbtn[aria-current="page"] { background: var(--accent-soft); color: var(--accent); }
+  .navbtn:focus-visible { outline: 3px solid var(--accent-line); outline-offset: 1px; }
+
+  /* Users */
+  .add-user { display: grid; grid-template-columns: 1.2fr 1.2fr .8fr auto; gap: 16px; align-items: end; padding: 20px 24px 0; }
+  .add-user .input-row { margin: 0; }
+  .add-user .btn { height: 48px; }
+  .panel > .form-err { padding: 0 24px 16px; margin-top: 8px; }
+  .input-row select, .role-select {
+    width: 100%; height: 48px; border: 1px solid var(--line); border-radius: 10px; padding: 0 12px; font: inherit; font-size: 17px; background: var(--card); color: var(--ink);
+  }
+  .input-row select:focus, .role-select:focus { outline: 3px solid var(--accent-line); border-color: var(--accent); }
+  .users-table th, .users-table td { text-align: left; vertical-align: middle; }
+  .users-table th:last-child, .users-table td:last-child { text-align: right; }
+  .users-table .role-select { height: 38px; width: auto; font-size: 15px; padding: 0 8px; }
+  .user-name { font-weight: 600; }
+  .user-sub { color: var(--ink-3); font-size: 14px; }
+  .pill { display: inline-block; font-size: 13px; font-weight: 600; padding: 3px 9px; border-radius: 999px; margin: 2px 4px 2px 0; }
+  .pill.on { background: var(--ok-soft); color: var(--ok); }
+  .pill.off { background: var(--soft); color: var(--ink-3); }
+  .pill.warn { background: var(--accent-soft); color: var(--accent); }
+  .row-actions { display: inline-flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+  .btn.sm { height: 36px; padding: 0 12px; font-size: 14px; }
+  .btn.danger { color: var(--err); }
+  .reset-row td { background: #fafbfc; border-top: 0 !important; }
+  .reset-form { display: inline-flex; gap: 8px; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
+  .reset-form label { font-size: 14px; color: var(--ink-2); font-weight: 500; }
+  .reset-form input { height: 36px; border: 1px solid var(--line); border-radius: 8px; padding: 0 10px; font-size: 15px; width: 200px; }
+  .reset-form input:focus { outline: 3px solid var(--accent-line); border-color: var(--accent); }
+  .link-btn { border: 0; background: none; color: var(--ink-2); font-weight: 600; font-size: 15px; padding: 8px 0 0; text-decoration: underline; text-underline-offset: 3px; width: 100%; }
+  .link-btn:hover { color: var(--ink); }
+
+  @media (max-width: 900px) {
+    .kpis { grid-template-columns: repeat(2, 1fr); }
+    .add-user { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 760px) {
+    .who, #refreshBtn, .brand-name { display: none; }
+    .mainnav { margin-left: 8px; }
+  }
   @media (max-width: 560px) {
     body { font-size: 16px; }
     .wrap { padding: 0 16px; }
-    .who { display: none; }
+    .topbar .wrap { gap: 8px; }
+    .navbtn { padding: 0 10px; }
+    .topbar .btn { padding: 0 10px; }
+    .add-user { grid-template-columns: 1fr; padding: 16px 16px 0; }
+    .panel > .form-err { padding: 0 16px 12px; }
     .head h1 { font-size: 25px; }
     .kpis { gap: 10px; }
     .kpi { padding: 14px 16px; }
@@ -203,10 +250,15 @@
       <span class="brand-mark" aria-hidden="true">
         <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h13v5a6 6 0 0 1-6 6h-1a6 6 0 0 1-6-6V8z"/><path d="M17 10h1.5a2.5 2.5 0 0 1 0 5H17"/><path d="M8 3v2M12 3v2"/></svg>
       </span>
-      Stock Tracker
+      <span class="brand-name">Stock Tracker</span>
     </div>
+    <nav class="mainnav" id="mainNav" hidden>
+      <button class="navbtn" data-view="stock" aria-current="page">Stock</button>
+      <button class="navbtn" data-view="users" id="navUsers" hidden>Users</button>
+    </nav>
     <div class="spacer"></div>
     <span class="who" id="who"></span>
+    <button class="btn ghost" id="pwBtn" hidden>Password</button>
     <button class="btn ghost" id="refreshBtn" hidden title="Reload from Supabase">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.6-6.4"/><path d="M21 4v5h-5"/></svg>
       Refresh
@@ -221,8 +273,8 @@
     <h1>Sign in</h1>
     <p>Use your team account to view and update stock.</p>
     <div class="input-row">
-      <label for="email">Email</label>
-      <input id="email" type="email" autocomplete="username" required>
+      <label for="login">Username or email</label>
+      <input id="login" type="text" autocomplete="username" autocapitalize="off" spellcheck="false" required>
     </div>
     <div class="input-row">
       <label for="password">Password</label>
@@ -232,6 +284,72 @@
     <div class="form-err" id="authErr" role="alert"></div>
   </form>
 </section>
+
+<!-- Set / change password -->
+<section class="auth" id="pwView" hidden>
+  <form class="auth-card" id="pwForm" autocomplete="on">
+    <h1 id="pwTitle">Change password</h1>
+    <p id="pwIntro"></p>
+    <div class="input-row">
+      <label for="pwNew">New password</label>
+      <input id="pwNew" type="password" autocomplete="new-password" required>
+    </div>
+    <div class="input-row">
+      <label for="pwConfirm">Confirm new password</label>
+      <input id="pwConfirm" type="password" autocomplete="new-password" required>
+    </div>
+    <button class="btn primary" type="submit" id="pwSave">Save password</button>
+    <button class="link-btn" type="button" id="pwCancel">Cancel</button>
+    <div class="form-err" id="pwErr" role="alert"></div>
+  </form>
+</section>
+
+<!-- Users (admins only) -->
+<main id="usersView" hidden>
+  <div class="wrap">
+    <div class="head">
+      <div>
+        <h1>Users</h1>
+        <p>Add people, set their first password, and control who can sign in.</p>
+      </div>
+    </div>
+
+    <section class="panel">
+      <div class="panel-head">
+        <div>
+          <h2>Add a user</h2>
+          <p>They sign in with this username and password, then choose their own password.</p>
+        </div>
+      </div>
+      <form class="add-user" id="addUserForm" autocomplete="off">
+        <div class="input-row">
+          <label for="nuName">Username</label>
+          <input id="nuName" required pattern="[a-z0-9._\-]{3,30}" title="3 to 30 characters: lowercase letters, numbers, dot, dash or underscore" placeholder="e.g. kiwi" autocapitalize="off" spellcheck="false">
+        </div>
+        <div class="input-row">
+          <label for="nuPass">Initial password</label>
+          <input id="nuPass" type="text" required minlength="6" autocomplete="off" spellcheck="false">
+        </div>
+        <div class="input-row">
+          <label for="nuRole">Role</label>
+          <select id="nuRole"><option value="member">Member</option><option value="admin">Admin</option></select>
+        </div>
+        <button class="btn primary" type="submit" id="addUserBtn">Add user</button>
+      </form>
+      <div class="form-err" id="addUserErr" role="alert"></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <div>
+          <h2>Team</h2>
+          <p id="usersCount">&nbsp;</p>
+        </div>
+      </div>
+      <div id="usersBody"></div>
+    </section>
+  </div>
+</main>
 
 <!-- App -->
 <main id="appView" hidden>
@@ -304,6 +422,10 @@ const state = {
   tab: localGet('tab') || OUTLETS[0],
   category: 'All',
   lowOnly: false,
+  profile: null,       // signed-in user's row from public.profiles
+  users: [],           // all profiles (admins only)
+  resetFor: null,      // user id with the reset-password row open
+  userBusy: null,      // user id with an admin action in flight
 };
 
 const $ = (id) => document.getElementById(id);
@@ -325,30 +447,72 @@ function toast(msg) {
 
 /* ---------- Auth ---------- */
 
+// People created with only a username sign in as <username>@LOGIN_DOMAIN.
+// Keep in sync with the admin-users edge function.
+const LOGIN_DOMAIN = 'tracker.test';
+const MIN_PASSWORD = 8;        // for passwords people choose themselves
+const MIN_INITIAL_PASSWORD = 6; // what admin-users accepts for initial passwords
+const toEmail = (login) => login.includes('@') ? login : `${login}@${LOGIN_DOMAIN}`;
+const isAdmin = () => !!state.profile && state.profile.role === 'admin';
+const hasDrafts = () => Object.keys(state.drafts).length > 0;
+
+const VIEWS = ['authView', 'pwView', 'appView', 'usersView'];
+function showView(id) {
+  for (const v of VIEWS) $(v).hidden = v !== id;
+  const inApp = id === 'appView' || id === 'usersView';
+  $('signOutBtn').hidden = id === 'authView';
+  $('pwBtn').hidden = !inApp;
+  $('refreshBtn').hidden = !inApp;
+  $('mainNav').hidden = !inApp;
+  $('navUsers').hidden = !isAdmin();
+  for (const b of document.querySelectorAll('.navbtn')) {
+    const current = (b.dataset.view === 'users') === (id === 'usersView');
+    b.setAttribute('aria-current', current ? 'page' : 'false');
+  }
+}
+
 async function init() {
   const { data: { session } } = await sb.auth.getSession();
-  session ? showApp(session) : showAuth();
-  sb.auth.onAuthStateChange((event, session) => {
+  session ? enter(session) : showAuth();
+  sb.auth.onAuthStateChange((event) => {
     if (event === 'SIGNED_OUT') showAuth();
   });
 }
 
-function showAuth() {
-  $('appView').hidden = true;
-  $('authView').hidden = false;
-  $('signOutBtn').hidden = true;
-  $('refreshBtn').hidden = true;
-  $('who').textContent = '';
+function showAuth(message) {
+  state.profile = null;
   state.rows = []; state.drafts = {}; state.status = {};
+  state.users = []; state.resetFor = null;
+  $('who').textContent = '';
+  $('authErr').textContent = message || '';
+  showView('authView');
 }
 
-function showApp(session) {
-  $('authView').hidden = true;
-  $('appView').hidden = false;
-  $('signOutBtn').hidden = false;
-  $('refreshBtn').hidden = false;
-  $('who').textContent = session.user.email || '';
-  load();
+// Every session must belong to an active profile before any stock is shown.
+async function enter(session) {
+  const { data: profile, error } = await sb
+    .from('profiles')
+    .select('id, username, role, active, must_change_password')
+    .eq('id', session.user.id)
+    .maybeSingle();
+  if (error || !profile || !profile.active) {
+    await sb.auth.signOut();
+    showAuth(error
+      ? 'Could not load your account: ' + error.message
+      : 'This account is not active. Ask an admin to enable it.');
+    return;
+  }
+  state.profile = profile;
+  $('who').textContent = `${profile.username} · ${profile.role}`;
+  profile.must_change_password ? showPassword(true) : showStock();
+}
+
+function showStock() { showView('appView'); load(); }
+
+function showUsers() {
+  if (!isAdmin()) return showStock();
+  showView('usersView');
+  loadUsers();
 }
 
 $('authForm').addEventListener('submit', async (e) => {
@@ -357,24 +521,237 @@ $('authForm').addEventListener('submit', async (e) => {
   btn.disabled = true; btn.textContent = 'Signing in…';
   $('authErr').textContent = '';
   const { data, error } = await sb.auth.signInWithPassword({
-    email: $('email').value.trim(),
+    email: toEmail($('login').value.trim().toLowerCase()),
     password: $('password').value,
   });
   btn.disabled = false; btn.textContent = 'Sign in';
-  if (error) { $('authErr').textContent = error.message; return; }
+  if (error) {
+    $('authErr').textContent = /invalid login/i.test(error.message) ? 'Wrong username or password.' : error.message;
+    return;
+  }
   $('password').value = '';
-  showApp(data.session);
+  enter(data.session);
 });
 
 $('signOutBtn').addEventListener('click', async () => {
-  if (Object.keys(state.drafts).length && !confirm('You have unsaved changes. Sign out anyway?')) return;
+  if (hasDrafts() && !confirm('You have unsaved changes. Sign out anyway?')) return;
   await sb.auth.signOut();
 });
 
 $('refreshBtn').addEventListener('click', () => {
-  if (Object.keys(state.drafts).length && !confirm('Discard unsaved changes and reload?')) return;
+  if (!$('usersView').hidden) return loadUsers();
+  if (hasDrafts() && !confirm('Discard unsaved changes and reload?')) return;
   state.drafts = {}; state.status = {};
   load();
+});
+
+$('mainNav').addEventListener('click', (e) => {
+  const b = e.target.closest('[data-view]');
+  if (!b) return;
+  b.dataset.view === 'users' ? showUsers() : showStock();
+});
+
+/* ---------- Password ---------- */
+
+function showPassword(required) {
+  $('pwTitle').textContent = required ? 'Choose a new password' : 'Change password';
+  $('pwIntro').textContent = required
+    ? 'You signed in with a temporary password. Set your own to continue.'
+    : `Set a new password for ${state.profile.username}.`;
+  $('pwCancel').hidden = required;
+  $('pwErr').textContent = '';
+  $('pwNew').value = ''; $('pwConfirm').value = '';
+  showView('pwView');
+  $('pwNew').focus();
+}
+
+$('pwBtn').addEventListener('click', () => {
+  if (hasDrafts() && !confirm('You have unsaved stock changes. Leave them for now?')) return;
+  showPassword(false);
+});
+$('pwCancel').addEventListener('click', showStock);
+
+$('pwForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const pw = $('pwNew').value;
+  const err = (m) => { $('pwErr').textContent = m; };
+  if (pw.length < MIN_PASSWORD) return err(`Use at least ${MIN_PASSWORD} characters.`);
+  if (pw.toLowerCase() === 'password') return err('Pick something other than "password".');
+  if (pw !== $('pwConfirm').value) return err("The two passwords don't match.");
+  const btn = $('pwSave');
+  btn.disabled = true; btn.textContent = 'Saving…';
+  const { error } = await sb.auth.updateUser({ password: pw });
+  if (!error && state.profile.must_change_password) {
+    const { error: flagErr } = await sb.from('profiles')
+      .update({ must_change_password: false })
+      .eq('id', state.profile.id);
+    if (!flagErr) state.profile.must_change_password = false;
+  }
+  btn.disabled = false; btn.textContent = 'Save password';
+  if (error) return err('Not saved: ' + error.message);
+  toast('Password updated');
+  showStock();
+});
+
+/* ---------- Users (admins) ---------- */
+
+async function loadUsers() {
+  $('usersBody').innerHTML = '<div class="loading">Loading users…</div>';
+  const { data, error } = await sb
+    .from('profiles')
+    .select('id, username, email, role, active, must_change_password, created_at')
+    .order('username');
+  if (error) {
+    $('usersBody').innerHTML = `<div class="empty">Could not load users: ${esc(error.message)}</div>`;
+    return;
+  }
+  state.users = data;
+  renderUsers();
+}
+
+// All changes to accounts go through the admin-users edge function,
+// which checks the caller is an active admin and holds the service key.
+async function adminCall(body) {
+  const { data, error } = await sb.functions.invoke('admin-users', { body });
+  if (error) {
+    let msg = error.message;
+    try { const j = await error.context.json(); if (j && j.error) msg = j.error; } catch {}
+    throw new Error(msg);
+  }
+  if (data && data.error) throw new Error(data.error);
+  return data;
+}
+
+function renderUsers() {
+  const n = state.users.length;
+  const active = state.users.filter((u) => u.active).length;
+  $('usersCount').textContent = `${n} ${n === 1 ? 'person' : 'people'} · ${active} active`;
+  $('usersBody').innerHTML = `
+    <div class="table-wrap">
+      <table class="users-table">
+        <thead><tr><th>User</th><th>Role</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody>${state.users.map(userRowHtml).join('')}</tbody>
+      </table>
+    </div>`;
+}
+
+function userRowHtml(u) {
+  const me = u.id === state.profile.id;
+  const busy = state.userBusy === u.id;
+  const dis = busy ? 'disabled' : '';
+  const realEmail = u.email && !u.email.endsWith('@' + LOGIN_DOMAIN) ? u.email : '';
+  const row = `
+    <tr data-id="${u.id}">
+      <td>
+        <div class="user-name">${esc(u.username)}${me ? ' <span class="user-sub">(you)</span>' : ''}</div>
+        ${realEmail ? `<div class="user-sub">${esc(realEmail)}</div>` : ''}
+      </td>
+      <td>
+        <select class="role-select" data-act="role" aria-label="Role for ${esc(u.username)}" ${me || busy ? 'disabled' : ''}>
+          <option value="member" ${u.role === 'member' ? 'selected' : ''}>Member</option>
+          <option value="admin" ${u.role === 'admin' ? 'selected' : ''}>Admin</option>
+        </select>
+      </td>
+      <td>
+        <span class="pill ${u.active ? 'on' : 'off'}">${u.active ? 'Active' : 'Inactive'}</span>
+        ${u.must_change_password ? '<span class="pill warn">Temporary password</span>' : ''}
+      </td>
+      <td>
+        <div class="row-actions">
+          <button class="btn sm" data-act="reset" ${dis}>Reset password</button>
+          ${me ? '' : `<button class="btn sm" data-act="toggle" ${dis}>${u.active ? 'Deactivate' : 'Activate'}</button>`}
+          ${me ? '' : `<button class="btn sm danger" data-act="remove" ${dis}>Remove</button>`}
+        </div>
+      </td>
+    </tr>`;
+  if (state.resetFor !== u.id) return row;
+  return row + `
+    <tr class="reset-row" data-id="${u.id}">
+      <td colspan="4">
+        <form class="reset-form" data-act="reset-save">
+          <label for="rp-${u.id}">New initial password for ${esc(u.username)}</label>
+          <input id="rp-${u.id}" type="text" minlength="${MIN_INITIAL_PASSWORD}" required autocomplete="off" spellcheck="false">
+          <button class="btn sm primary" type="submit" ${dis}>Save</button>
+          <button class="btn sm ghost" type="button" data-act="reset-cancel">Cancel</button>
+        </form>
+      </td>
+    </tr>`;
+}
+
+async function runUserAction(id, body, okMsg) {
+  state.userBusy = id;
+  renderUsers();
+  try {
+    await adminCall(body);
+    toast(okMsg);
+    state.resetFor = null;
+  } catch (err) {
+    toast(err.message);
+  } finally {
+    state.userBusy = null;
+    await loadUsers();
+  }
+}
+
+$('usersBody').addEventListener('click', (e) => {
+  const btn = e.target.closest('button[data-act]');
+  if (!btn) return;
+  const id = btn.closest('tr').dataset.id;
+  const u = state.users.find((x) => x.id === id);
+  const act = btn.dataset.act;
+  if (act === 'reset') {
+    state.resetFor = state.resetFor === id ? null : id;
+    renderUsers();
+    const input = document.getElementById('rp-' + id);
+    if (input) input.focus();
+  } else if (act === 'reset-cancel') {
+    state.resetFor = null;
+    renderUsers();
+  } else if (act === 'toggle') {
+    runUserAction(id, { action: 'set_active', user_id: id, active: !u.active },
+      `${u.username} ${u.active ? 'deactivated' : 'activated'}`);
+  } else if (act === 'remove') {
+    if (!confirm(`Remove ${u.username}? They will no longer be able to sign in. This cannot be undone.`)) return;
+    runUserAction(id, { action: 'delete', user_id: id }, `${u.username} removed`);
+  }
+});
+
+$('usersBody').addEventListener('change', (e) => {
+  if (!e.target.matches('.role-select')) return;
+  const id = e.target.closest('tr').dataset.id;
+  const u = state.users.find((x) => x.id === id);
+  runUserAction(id, { action: 'set_role', user_id: id, role: e.target.value },
+    `${u.username} is now ${e.target.value === 'admin' ? 'an admin' : 'a member'}`);
+});
+
+$('usersBody').addEventListener('submit', (e) => {
+  if (!e.target.matches('.reset-form')) return;
+  e.preventDefault();
+  const id = e.target.closest('tr').dataset.id;
+  const u = state.users.find((x) => x.id === id);
+  const password = document.getElementById('rp-' + id).value;
+  runUserAction(id, { action: 'reset_password', user_id: id, password },
+    `Password reset for ${u.username}. They'll choose a new one at next sign-in.`);
+});
+
+$('addUserForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const username = $('nuName').value.trim().toLowerCase();
+  const password = $('nuPass').value;
+  const role = $('nuRole').value;
+  const btn = $('addUserBtn');
+  $('addUserErr').textContent = '';
+  btn.disabled = true; btn.textContent = 'Adding…';
+  try {
+    await adminCall({ action: 'create', username, password, role });
+    toast(`${username} added. They sign in with username "${username}".`);
+    e.target.reset();
+    await loadUsers();
+  } catch (err) {
+    $('addUserErr').textContent = err.message;
+  } finally {
+    btn.disabled = false; btn.textContent = 'Add user';
+  }
 });
 
 window.addEventListener('beforeunload', (e) => {
